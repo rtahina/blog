@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Str;
 
 class PostService
 {
@@ -40,18 +42,35 @@ class PostService
      */
     public function getSinglePost(Post $post): ?Post
     {
-        return Post::findOrFail($post->id);
+        try {
+            $post = Post::findOrFail($post->id);
+        } catch(ModelNotFoundException $e) {
+            return Response(
+                ['error' => $e->getMessage()],
+                404
+            );
+        }
+        
+        return $post;
     }
 
     /**
      * Create a Post
      * 
      * @param Request $request
-     * @return Vehicule|False
+     * @return Post|False
      */
     public function create(Request $request): ?Post
     {
-        return Post::create($request->all());
+        $title = request('title');
+
+        $data = [
+            'user_id' => request('user_id'),
+            'title' => $title,
+            'slug' => Str::slug($title),
+            'body' => request('body')
+        ];
+        return Post::create($data);
     }
 
     public function update(int $id, Request $request): ?Post

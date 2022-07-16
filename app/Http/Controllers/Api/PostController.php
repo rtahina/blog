@@ -8,7 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Services\PostService;
-use GuzzleHttp\Psr7\Response;
+
 
 class PostController extends Controller
 {
@@ -49,7 +49,9 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post = $this->postService->create($request);
+        
+        return Response(new PostResource($post), 200);
     }
 
     /**
@@ -61,6 +63,12 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post = $this->postService->getSinglePost($post);
+
+        if (!$post) {
+            return Response([
+                'message' => 'Post not found'
+            ], 404);
+        }
 
         return Response(new PostResource($post), 200);
     }
