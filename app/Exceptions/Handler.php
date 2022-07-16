@@ -65,7 +65,9 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof ModelNotFoundException) {
-            return response()->json(['error' => 'Data not found.']);
+            return response()
+                    ->json(['error' => 'Data not found.'])
+                    ->setStatusCode(404);
         }
 
         $e = $this->prepareException($this->mapException($e));

@@ -87,13 +87,19 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatePostRequest  $request
+     * @param  \App\Http\Requests\StorePostRequest  $request
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
-        //
+        $post = $this->postService->update($post->id, $request);
+        
+        if ($post)
+            return Response(
+                new PostResource($post),
+                200
+            );
     }
 
     /**

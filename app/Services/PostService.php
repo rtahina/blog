@@ -7,6 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Str;
+use phpDocumentor\Reflection\PseudoTypes\False_;
 
 class PostService
 {
@@ -42,14 +43,8 @@ class PostService
      */
     public function getSinglePost(Post $post): ?Post
     {
-        try {
-            $post = Post::findOrFail($post->id);
-        } catch(ModelNotFoundException $e) {
-            return Response(
-                ['error' => $e->getMessage()],
-                404
-            );
-        }
+            
+        $post = Post::findOrFail($post->id);
         
         return $post;
     }
@@ -57,29 +52,50 @@ class PostService
     /**
      * Create a Post
      * 
-     * @param Request $request
+     * @param Illuminate\Http\Request; $request
      * @return Post|False
      */
     public function create(Request $request): ?Post
     {
         $title = request('title');
+        $slug = request('slug') ?? Str::slug($title);
 
         $data = [
             'user_id' => request('user_id'),
             'title' => $title,
-            'slug' => Str::slug($title),
+            'slug' => $slug,
             'body' => request('body')
         ];
         return Post::create($data);
     }
 
-    public function update(int $id, Request $request): ?Post
+    /**
+     * Update post
+     * 
+     * @param int $id
+     * @param RIlluminate\Http\Request $request;
+     * 
+     * @return mixed Post|false 
+     */
+    public function update(int $id, Request $request): Post|false
     {        
-        $Post = Post::findOrFail($id);
+        $post = Post::findOrFail($id);
         
-        if ($Post->update($request->all())) {
-            return $Post;
-        }
+        $title = request('title');
+        $slug = request('slug') ?? Str::slug($title);
+
+        $data = [
+            'user_id' => request('user_id'),
+            'title' => $title,
+            'slug' => $slug,
+            'body' => request('body')
+        ];
+        $post->fill($data);
+        
+        if ($post->save($data))
+            return $post;
+        else 
+            return false;
     }
 
     /**
