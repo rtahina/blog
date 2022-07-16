@@ -30,7 +30,6 @@ Route::group(
     function($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::post('/profile', [AuthController::class, 'profile']);
 });
@@ -38,5 +37,6 @@ Route::group(
 Route::apiResource('posts', PostController::class)->only(['index', 'show']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
+    Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::apiResource('posts', PostController::class)->only(['store', 'update', 'destroy']);
 });
