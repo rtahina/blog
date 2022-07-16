@@ -35,4 +35,8 @@ Route::group(
     Route::post('/profile', [AuthController::class, 'profile']);
 });
 
-Route::apiResource('posts', PostController::class);
+Route::apiResource('posts', PostController::class)->only(['index', 'show']);
+
+Route::group(['middleware' => ['jwt.verify']], function() {
+    Route::apiResource('posts', PostController::class)->only(['store', 'update', 'destroy']);
+});
