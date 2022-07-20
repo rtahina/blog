@@ -9,9 +9,55 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @OA\Schema(
+ *     title="User",
+ *     description="User model",
+ *     @OA\Xml(
+ *         name="User"
+ *     )
+ * )
+ */
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * @OA\Property(
+     *     title="ID",
+     *     description="ID",
+     *     format="int64",
+     *     example=1
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+    
+    /**
+     * @OA\Property(
+     *     title="Name",
+     *     description="User's name",
+     *     format="string",
+     *     example="John Doe"
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="E-mail",
+     *     description="User's e-mail address",
+     *     format="string",
+     *     example="john@doe.com"
+     * )
+     *
+     * @var string
+     */
+    private $email;
 
     /**
      * The attributes that are mass assignable.

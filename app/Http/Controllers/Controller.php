@@ -23,13 +23,13 @@ use Illuminate\Routing\Controller as BaseController;
  *
  * @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST,
- *      description="Demo API Server"
+ *      description="Blog API Server"
  * )
 
     *
     * @OA\Tag(
     *     name="Blog",
-    *     description="API Endpoints of the Blog project"
+    *     description="API Endpoints"
     * )
     */
 class Controller extends BaseController

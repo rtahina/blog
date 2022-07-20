@@ -15,7 +15,7 @@
     "servers": [
         {
             "url": "http://blog.test/api",
-            "description": "Demo API Server"
+            "description": "Blog API Server"
         }
     ],
     "paths": {
@@ -25,35 +25,156 @@
                     "Posts"
                 ],
                 "summary": "Get List Of posts",
-                "description": "Returns all countries and associated provinces. The country_slug variable is used for country specific data",
+                "description": "Returns all posts with their author",
                 "operationId": "index",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
                         }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "404": {
-                        "description": "not found"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PostResource": {
+                "title": "PostResource",
+                "description": "Post resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Post"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PostResource"
+                }
+            },
+            "Post": {
+                "title": "Post",
+                "description": "Post model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "The blog post title",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is my first blog post"
+                    },
+                    "slug": {
+                        "title": "Slug",
+                        "description": "The blog post slug",
+                        "type": "string",
+                        "format": "string",
+                        "example": "this-is-my-first-blog-post"
+                    },
+                    "body": {
+                        "title": "Body",
+                        "description": "The blog post content",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is the content of my first blog"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Creation date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-01-01 09:01:00"
+                    },
+                    "updated_at": {
+                        "title": "Created at",
+                        "description": "Creation date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-01-01 09:01:00"
+                    },
+                    "author_id": {
+                        "title": "Author ID",
+                        "description": "The blog post author ID",
+                        "type": "string",
+                        "format": "integer",
+                        "example": 22
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Post"
+                }
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "User's name",
+                        "type": "string",
+                        "format": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "title": "E-mail",
+                        "description": "User's e-mail address",
+                        "type": "string",
+                        "format": "string",
+                        "example": "john@doe.com"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
+                }
+            }
+        },
+        "responses": {
+            "401": {
+                "description": "Unauthenticated"
+            },
+            "403": {
+                "description": "Forbidden"
+            },
+            "400": {
+                "description": "Bad Request"
+            },
+            "404": {
+                "description": "not found"
             }
         }
     },
     "tags": [
         {
             "name": "Blog",
-            "description": "API Endpoints of the Blog project"
+            "description": "API Endpoints"
         }
     ]
 }

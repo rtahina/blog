@@ -31,12 +31,11 @@ class PostController extends Controller
      *      tags={"Posts"},
 
      *      summary="Get List Of posts",
-     *      description="Returns all countries and associated provinces. The country_slug variable is used for country specific data",
+     *      description="Returns all posts with their author",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
-     *          @OA\MediaType(
-     *           mediaType="application/json",
+     *          @OA\JsonContent(ref="#/components/schemas/PostResource")
      *      )
      *      ),
      *      @OA\Response(
@@ -47,14 +46,14 @@ class PostController extends Controller
      *          response=403,
      *          description="Forbidden"
      *      ),
-     * @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     * @OA\Response(
-     *      response=404,
-     *      description="not found"
-     *   ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
      *  )
      */
     public function index()
