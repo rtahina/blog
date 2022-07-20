@@ -37,6 +37,18 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
                     }
                 }
             }
@@ -54,6 +66,93 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Post"
+                        }
+                    },
+                    "links": {
+                        "title": "Links",
+                        "description": "Pagination links",
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "properties": {
+                                "first": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=1"
+                                },
+                                "last": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=3"
+                                },
+                                "prev": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=3"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=3"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "meta": {
+                        "title": "Meta",
+                        "description": "Meta data",
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "properties": {
+                                "current_page": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "from": {
+                                    "type": "integer",
+                                    "example": 0
+                                },
+                                "last_page": {
+                                    "type": "integer",
+                                    "example": 5
+                                },
+                                "links": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "url": {
+                                                "type": "string",
+                                                "example": "http://blog.test/api/posts?page=1"
+                                            },
+                                            "label": {
+                                                "type": "string",
+                                                "example": "&laquo; Previous"
+                                            },
+                                            "active": {
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "example": "http://blog.test/api/posts"
+                                },
+                                "per_page": {
+                                    "type": "integer",
+                                    "example": 10
+                                },
+                                "to": {
+                                    "type": "integer",
+                                    "example": 10
+                                },
+                                "total": {
+                                    "description": "Total number of posts",
+                                    "type": "integer",
+                                    "example": 100
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 },
@@ -154,20 +253,6 @@
                 "xml": {
                     "name": "User"
                 }
-            }
-        },
-        "responses": {
-            "401": {
-                "description": "Unauthenticated"
-            },
-            "403": {
-                "description": "Forbidden"
-            },
-            "400": {
-                "description": "Bad Request"
-            },
-            "404": {
-                "description": "not found"
             }
         }
     },

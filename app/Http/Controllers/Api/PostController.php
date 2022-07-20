@@ -32,11 +32,16 @@ class PostController extends Controller
 
      *      summary="Get List Of posts",
      *      description="Returns all posts with their author",
+     *      @OA\RequestBody(
+     *          required=false,
+     *          @OA\property(
+     *              
+     *          )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(ref="#/components/schemas/PostResource")
-     *      )
      *      ),
      *      @OA\Response(
      *          response=401,
@@ -60,7 +65,7 @@ class PostController extends Controller
     {
         $posts = $this->postService->all();
 
-        return Response(PostResource::collection($posts), 200);
+        return PostResource::collection($posts);
     }
 
     /**
