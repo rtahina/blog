@@ -172,7 +172,7 @@ class PostController extends Controller
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\MediaType(
-     *             		mediaType="multipart/form-data",
+     *             		mediaType="application/x-www-form-urlencoded",
      *             		@OA\Schema(ref="#/components/schemas/StorePostRequest"),
      *             	)         
      *      ),
@@ -199,9 +199,9 @@ class PostController extends Controller
      *      )
      * )
      */
-    public function update(StorePostRequest $request, Post $post)
+    public function update(StorePostRequest $request, int $id)
     {
-        $post = $this->postService->update($post->id, $request);
+        $post = $this->postService->update($id, $request);
         
         if ($post)
             return Response(
