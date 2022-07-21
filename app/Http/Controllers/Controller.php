@@ -25,13 +25,12 @@ use Illuminate\Routing\Controller as BaseController;
  *      url=L5_SWAGGER_CONST_HOST,
  *      description="Blog API Server"
  * )
-
-    *
-    * @OA\Tag(
-    *     name="Blog",
-    *     description="API Endpoints"
-    * )
-    */
+ * @OA\SecurityScheme(
+ *     bearerFormat="JWT",
+ *     type="apiKey",
+ *     securityScheme="bearer"
+ * )
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

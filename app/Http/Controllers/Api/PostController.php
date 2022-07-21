@@ -29,13 +29,36 @@ class PostController extends Controller
      *      path="/posts",
      *      operationId="index",
      *      tags={"Posts"},
-
-     *      summary="Get List Of posts",
+     *      summary="Gets list of posts",
      *      description="Returns all posts with their author",
-     *      @OA\RequestBody(
+     *      @OA\Parameter(
+     *          name="orderBy",
+     *          in="query",
      *          required=false,
-     *          @OA\property(
-     *              
+     *          description="Field to apply the sorting on",
+     *          example="title",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="orderDirection",
+     *          in="query",
+     *          required=false,
+     *          description="Sorting direction DESC or ASC - Default ASC",
+     *          example="asc",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="perPage",
+     *          in="query",
+     *          required=false,
+     *          description="Numbe of records per page - Default 10",
+     *          example=10,
+     *          @OA\Schema(
+     *              type="integer"
      *          )
      *      ),
      *      @OA\Response(
@@ -121,12 +144,60 @@ class PostController extends Controller
         //
     }
 
+    
     /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\StorePostRequest  $request
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Put(
+     *      path="/posts/{id}",
+     *      security={"bearer"},
+     *      operationId="updatePost",
+     *      tags={"Posts"},
+     *      summary="Update blog post",
+     *      description="Update blog post",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Post ID",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *             		mediaType="multipart/form-data",
+     *             		@OA\Schema(ref="#/components/schemas/StorePostRequest"),
+     *             	)         
+     *      ),
+     *      @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/Post")
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
      */
     public function update(StorePostRequest $request, Post $post)
     {

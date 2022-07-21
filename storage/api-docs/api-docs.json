@@ -24,9 +24,41 @@
                 "tags": [
                     "Posts"
                 ],
-                "summary": "Get List Of posts",
+                "summary": "Gets list of posts",
                 "description": "Returns all posts with their author",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "orderBy",
+                        "in": "query",
+                        "description": "Field to apply the sorting on",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "title"
+                    },
+                    {
+                        "name": "orderDirection",
+                        "in": "query",
+                        "description": "Sorting direction DESC or ASC - Default ASC",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "asc"
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Numbe of records per page - Default 10",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -52,10 +84,108 @@
                     }
                 }
             }
+        },
+        "/posts/{id}": {
+            "put": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Update blog post",
+                "description": "Update blog post",
+                "operationId": "updatePost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePostRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Post"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearer"
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "StorePostRequest": {
+                "title": "StorePostRequest",
+                "description": "Post request",
+                "properties": {
+                    "title": {
+                        "title": "Title",
+                        "description": "The blog post title",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is my first blog post"
+                    },
+                    "slug": {
+                        "title": "Slug",
+                        "description": "The blog post slug",
+                        "type": "string",
+                        "format": "string",
+                        "example": "this-is-my-first-blog-post"
+                    },
+                    "body": {
+                        "title": "Body",
+                        "description": "The blog post content",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is the content of my first blog"
+                    },
+                    "user_id": {
+                        "title": "Author ID",
+                        "description": "The blog post's author ID",
+                        "type": "integer",
+                        "format": "integer",
+                        "example": 10
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "StorePostRequest"
+                }
+            },
             "PostResource": {
                 "title": "PostResource",
                 "description": "Post resource",
@@ -254,12 +384,12 @@
                     "name": "User"
                 }
             }
+        },
+        "securitySchemes": {
+            "bearer": {
+                "type": "apiKey",
+                "bearerFormat": "JWT"
+            }
         }
-    },
-    "tags": [
-        {
-            "name": "Blog",
-            "description": "API Endpoints"
-        }
-    ]
+    }
 }
