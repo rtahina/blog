@@ -118,7 +118,17 @@ class Post extends Model
      */
     protected $guarded = [];
 
+    /**
+     * Post's owner
+     */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Post's comments
+     */
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 }
