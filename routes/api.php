@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -34,7 +35,12 @@ Route::group(
     Route::post('/profile', [AuthController::class, 'profile']);
 });
 
+// posts
 Route::apiResource('posts', PostController::class)->only(['index', 'show']);
+
+// Comments
+Route::get('/posts/{id}/comments', [CommentController::class, 'postComments']);
+Route::get('/comments', [CommentController::class, 'index']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('auth/logout', [AuthController::class, 'logout']);

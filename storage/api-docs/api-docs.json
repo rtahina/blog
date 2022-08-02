@@ -19,6 +19,72 @@
         }
     ],
     "paths": {
+        "/comments": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Gets list of comments",
+                "description": "Returns all comments",
+                "operationId": "indexComment",
+                "parameters": [
+                    {
+                        "name": "orderBy",
+                        "in": "query",
+                        "description": "Field to apply the sorting on",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "title"
+                    },
+                    {
+                        "name": "orderDirection",
+                        "in": "query",
+                        "description": "Sorting direction DESC or ASC - Default ASC",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "asc"
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Numbe of records per page - Default 10",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                }
+            }
+        },
         "/posts": {
             "get": {
                 "tags": [
@@ -186,6 +252,111 @@
                     "name": "StorePostRequest"
                 }
             },
+            "CommentResource": {
+                "title": "CommentResource",
+                "description": "Comment resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Comment"
+                        }
+                    },
+                    "links": {
+                        "title": "Links",
+                        "description": "Pagination links",
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "properties": {
+                                "first": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=1"
+                                },
+                                "last": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=3"
+                                },
+                                "prev": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=3"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "example": "https://blog.test/api/posts?page=3"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "meta": {
+                        "title": "Meta",
+                        "description": "Meta data",
+                        "type": "array",
+                        "format": "array",
+                        "items": {
+                            "properties": {
+                                "current_page": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "from": {
+                                    "type": "integer",
+                                    "example": 0
+                                },
+                                "last_page": {
+                                    "type": "integer",
+                                    "example": 5
+                                },
+                                "links": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "url": {
+                                                "type": "string",
+                                                "example": "http://blog.test/api/comments?page=1"
+                                            },
+                                            "label": {
+                                                "type": "string",
+                                                "example": "&laquo; Previous"
+                                            },
+                                            "active": {
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "example": "http://blog.test/api/comments"
+                                },
+                                "per_page": {
+                                    "type": "integer",
+                                    "example": 10
+                                },
+                                "to": {
+                                    "type": "integer",
+                                    "example": 10
+                                },
+                                "total": {
+                                    "description": "Total number of comments",
+                                    "type": "integer",
+                                    "example": 100
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "CommentResource"
+                }
+            },
             "PostResource": {
                 "title": "PostResource",
                 "description": "Post resource",
@@ -289,6 +460,50 @@
                 "type": "object",
                 "xml": {
                     "name": "PostResource"
+                }
+            },
+            "Comment": {
+                "title": "Comment",
+                "description": "Comment model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "comment": {
+                        "title": "Comment",
+                        "description": "The blog post comment",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is my first comment"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Creation date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-01-01 09:01:00"
+                    },
+                    "updated_at": {
+                        "title": "Created at",
+                        "description": "Creation date and time",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-01-01 09:01:00"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "post": {
+                        "$ref": "#/components/schemas/Post"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Comment"
                 }
             },
             "Post": {
