@@ -293,8 +293,77 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Delete(
+     *      path="/posts/{id}",
+     *      security={"bearer"},
+     *      operationId="deletePost",
+     *      tags={"Posts"},
+     *      summary="Deletes a blog post",
+     *      description="Deletes a blog post",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Post ID",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          content={
+     *              @OA\MediaType(
+     *                  mediaType="application/json",
+     *                  @OA\Schema(
+     *                    @OA\Property(
+     *                         property="success",
+     *                         type="boolean",
+     *                         description="Status of the operation",
+     *                         example=true
+     *                   ),
+     *                   @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         description="The response message",
+     *                         example="Post successfully deleted"
+     *                   ),
+     *              )    
+     *              )
+     *          }
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
     public function destroy(Post $post)
     {
-        //
+        $delete = $this->postService->destroy($post->id);
+
+        $success = $delete;
+        $message = ($delete)? 'Post could not be deleted' : 'Post deleted successfuly';
+
+        return Response(
+            array(
+                'success' => $success,
+                'message' => $message
+            ),
+            200
+        );
     }
 }
