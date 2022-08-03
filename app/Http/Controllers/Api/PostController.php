@@ -102,8 +102,8 @@ class PostController extends Controller
      *      security={"bearer"},
      *      operationId="createPost",
      *      tags={"Posts"},
-     *      summary="Create a blog post",
-     *      description="Create blog post",
+     *      summary="Creates a blog post",
+     *      description="Creates a blog post",
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\MediaType(
@@ -163,7 +163,7 @@ class PostController extends Controller
      *      path="/posts/{id}",
      *      operationId="showPost",
      *      tags={"Posts"},
-     *      summary="Single blog post",
+     *      summary="Shows a single blog post",
      *      description="Shows a single blog post",
      *      @OA\Parameter(
      *          name="id",
@@ -235,8 +235,8 @@ class PostController extends Controller
      *      security={"bearer"},
      *      operationId="updatePost",
      *      tags={"Posts"},
-     *      summary="Update blog post",
-     *      description="Update blog post",
+     *      summary="Updates blog post",
+     *      description="Updates a single blog post",
      *      @OA\Parameter(
      *          name="id",
      *          description="Post ID",
