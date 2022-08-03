@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Post;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use App\Http\Resources\PostResource;
 use App\Services\PostService;
+use App\Services\CommentService;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\CommentResource;
+use App\Http\Requests\UpdatePostRequest;
 
 
 class PostController extends Controller
 {
     protected $postService;
+    protected $commentService;
 
-    public function __construct(PostService $postService)
+    public function __construct(PostService $postService, CommentService $commentService)
     {
         $this->postService = $postService;
+        $this->commentService = $commentService;
     }
     
     /**
@@ -92,8 +96,9 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created resource in storage.
      *
+     * @param  \App\Http\Requests\StorePostRequest  $request
      * @return \Illuminate\Http\Response
      */
     /**
@@ -105,11 +110,7 @@ class PostController extends Controller
      *      summary="Creates a blog post",
      *      description="Creates a blog post",
      *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\MediaType(
-     *             		mediaType="application/x-www-form-urlencoded",
-     *             		@OA\Schema(ref="#/components/schemas/StorePostRequest"),
-     *             	)         
+     *          ref="#/components/requestBodies/StorePostRequest" 
      *      ),
      *      @OA\Response(
      *          response=202,
@@ -133,17 +134,6 @@ class PostController extends Controller
      *          description="Resource Not Found"
      *      )
      * )
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StorePostRequest  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StorePostRequest $request)
     {
@@ -211,18 +201,6 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
-
-    
-    /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\StorePostRequest  $request
@@ -247,11 +225,7 @@ class PostController extends Controller
      *          )
      *      ),
      *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\MediaType(
-     *             		mediaType="application/x-www-form-urlencoded",
-     *             		@OA\Schema(ref="#/components/schemas/UpdatePostRequest"),
-     *             	)         
+     *          ref="#/components/requestBodies/StorePostRequest" 
      *      ),
      *      @OA\Response(
      *          response=202,
@@ -296,8 +270,8 @@ class PostController extends Controller
     /**
      * @OA\Delete(
      *      path="/posts/{id}",
-     *      security={"bearer"},
      *      operationId="deletePost",
+     *      security={"bearer"},
      *      tags={"Posts"},
      *      summary="Deletes a blog post",
      *      description="Deletes a blog post",
@@ -356,7 +330,7 @@ class PostController extends Controller
         $delete = $this->postService->destroy($post->id);
 
         $success = $delete;
-        $message = ($delete)? 'Post could not be deleted' : 'Post deleted successfuly';
+        $message = ($delete)? 'Post successfuly deleted' : 'Post could not be deleted';
 
         return Response(
             array(
@@ -365,5 +339,56 @@ class PostController extends Controller
             ),
             200
         );
+    }
+
+    /**
+     * Lists comments attached to a blog post.
+     *
+     * @param  int $id post ID
+     * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Get(
+     *      path="/posts/{id}/comments",
+     *      operationId="postComments",
+     *      tags={"Comments"},
+     *      summary="Lists comments on a single blog post",
+     *      description="Lists comments on a single blog post",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Post ID",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *     @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/CommentResource")
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
+    public function postComments(int $id)
+    {
+        $comments = $this->commentService->all($id);
+        return CommentResource::collection($comments);
     }
 }

@@ -141,11 +141,11 @@ class CommentResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
+            'post_id' => $this->post_id,
             'comment' => $this->comment,
             'created_at' => Carbon::parse($this->create_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-d-m H:i:s'),
-            'author' => new UserResource($this->user),
-            'post' => new PostResource($this->post)
+            'author' => new UserResource($this->user)
         ];
     }
 }

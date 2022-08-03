@@ -4,6 +4,18 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\RequestBody(
+ *      request="StoreCommentRequest",
+ *      required=true,
+ *      @OA\JsonContent(
+ *          required={"comment"},
+ *          @OA\Property(
+ *              type="string", property="comment"
+ *          )
+ *      )
+ * )
+ */
 class StoreCommentRequest extends FormRequest
 {
     /**

@@ -39,10 +39,13 @@ Route::group(
 Route::apiResource('posts', PostController::class)->only(['index', 'show']);
 
 // Comments
-Route::get('/posts/{id}/comments', [CommentController::class, 'postComments']);
+Route::get('/posts/{id}/comments', [PostController::class, 'postComments']);
 Route::get('/comments', [CommentController::class, 'index']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::apiResource('posts', PostController::class)->only(['store', 'update', 'destroy']);
+    Route::post('/posts/{id}/comments', [CommentController::class, 'store']);
+    Route::put('/posts/{postId}/comments/{commentId}', [CommentController::class, 'update']);
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 });

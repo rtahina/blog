@@ -24,10 +24,10 @@ class PostService
     {        
         $Posts = Post::orderBy($orderBy, $orderDirection)
                     ->with('user')
-                    ->when(request()->has('title'), function ($q, $value) {
+                    ->when(request()->has('title'), function ($q) {
                         $q->where('title', 'LIKE', '%' . request('title') . '%');
                     })
-                    ->when(request()->has('body'), function ($q, $value) {
+                    ->when(request()->has('body'), function ($q) {
                         $q->where('body', 'LIKE', '%' . request('body') . '%');
                     })
                     ->paginate($perPage);

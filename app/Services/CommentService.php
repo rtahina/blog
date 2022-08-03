@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Request;
-use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 use phpDocumentor\Reflection\PseudoTypes\False_;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CommentService
 {
@@ -22,23 +23,20 @@ class CommentService
      * @return LengthAwarePaginator
      */
     
-    public function all(int $CommentId = 0, string $orderBy = "id", string $orderDirection = "ASC", int $perPage = 25): LengthAwarePaginator
+    public function all(int $postId = 0, string $orderBy = "id", string $orderDirection = "ASC", int $perPage = 25): LengthAwarePaginator
     {        
-        $Comments = Comment::orderBy($orderBy, $orderDirection)
+        $comments = Comment::query()
+                    ->orderBy($orderBy, $orderDirection)
                     ->with('user')
-                    ->with('post')
-                    ->when($CommentId > 0, function ($q, $CommentId) {
-                        $q->where('Comment_id', $CommentId);
+                    ->when($postId > 0, function ($q) use ($postId) {
+                        $q->where('post_id', $postId);
                     })
-                    ->when(request()->has('title'), function ($q, $value) {
-                        $q->where('title', 'LIKE', '%' . request('title') . '%');
-                    })
-                    ->when(request()->has('body'), function ($q, $value) {
-                        $q->where('body', 'LIKE', '%' . request('body') . '%');
+                    ->when(request()->has('s'), function ($q) {
+                        $q->where('comment', 'LIKE', '%' . request('s') . '%');
                     })
                     ->paginate($perPage);
-        
-        return  $Comments;                      
+
+        return  $comments;                      
     }
 
     /**
@@ -47,12 +45,12 @@ class CommentService
      * @param App\Models\Comment $Comment
      * @return Comment|False
      */
-    public function getSingleComment(Comment $Comment): ?Comment
+    public function getSingleComment(Comment $comment): ?Comment
     {
             
-        $Comment = Comment::findOrFail($Comment->id);
+        $comment = Comment::findOrFail($comment->id);
         
-        return $Comment;
+        return $comment;
     }
 
     /**
@@ -61,17 +59,15 @@ class CommentService
      * @param Illuminate\Http\Request; $request
      * @return Comment|False
      */
-    public function create(Request $request): ?Comment
+    public function create(Request $request, int $postId) 
     {
-        $title = request('title');
-        $slug = request('slug') ?? Str::slug($title);
-
+        $userId = auth()->user()->id;
         $data = [
-            'user_id' => request('user_id'),
-            'title' => $title,
-            'slug' => $slug,
-            'body' => request('body')
+            'user_id' => $userId,
+            'post_id' => $postId,
+            'comment' => request('comment'),
         ];
+        
         return Comment::create($data);
     }
 
@@ -83,23 +79,20 @@ class CommentService
      * 
      * @return mixed Comment|false 
      */
-    public function update(int $id, Request $request): Comment|false
+    public function update(Request $request, int $postId, int $commentId): Comment|false
     {        
-        $Comment = Comment::findOrFail($id);
-        
-        $title = request('title');
-        $slug = request('slug') ?? Str::slug($title);
+        $comment = Comment::findOrFail($commentId);
+        $userId = auth()->user()->id;
 
         $data = [
-            'user_id' => request('user_id'),
-            'title' => $title,
-            'slug' => $slug,
-            'body' => request('body')
+            'user_id' => $userId,
+            'post_id' => $postId,
+            'comment' => request('comment')
         ];
-        $Comment->fill($data);
+        $comment->fill($data);
         
-        if ($Comment->save($data))
-            return $Comment;
+        if ($comment->save($data))
+            return $comment;
         else 
             return false;
     }
