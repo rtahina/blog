@@ -96,6 +96,44 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Post(
+     *      path="/posts",
+     *      security={"bearer"},
+     *      operationId="createPost",
+     *      tags={"Posts"},
+     *      summary="Create a blog post",
+     *      description="Create blog post",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *             		mediaType="application/x-www-form-urlencoded",
+     *             		@OA\Schema(ref="#/components/schemas/StorePostRequest"),
+     *             	)         
+     *      ),
+     *      @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/Post")
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
     public function create()
     {
         //
@@ -119,6 +157,45 @@ class PostController extends Controller
      *
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Get(
+     *      path="/posts/{id}",
+     *      operationId="showPost",
+     *      tags={"Posts"},
+     *      summary="Single blog post",
+     *      description="Shows a single blog post",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Post ID",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *     @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/Post")
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
      */
     public function show(Post $post)
     {
@@ -173,7 +250,7 @@ class PostController extends Controller
      *          required=true,
      *          @OA\MediaType(
      *             		mediaType="application/x-www-form-urlencoded",
-     *             		@OA\Schema(ref="#/components/schemas/StorePostRequest"),
+     *             		@OA\Schema(ref="#/components/schemas/UpdatePostRequest"),
      *             	)         
      *      ),
      *      @OA\Response(

@@ -149,27 +149,14 @@
                         "description": "not found"
                     }
                 }
-            }
-        },
-        "/posts/{id}": {
-            "put": {
+            },
+            "post": {
                 "tags": [
                     "Posts"
                 ],
-                "summary": "Update blog post",
-                "description": "Update blog post",
-                "operationId": "updatePost",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Post ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "summary": "Create a blog post",
+                "description": "Create blog post",
+                "operationId": "createPost",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -210,13 +197,116 @@
                     }
                 ]
             }
+        },
+        "/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Single blog post",
+                "description": "Shows a single blog post",
+                "operationId": "showPost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Post"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Update blog post",
+                "description": "Update blog post",
+                "operationId": "updatePost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePostRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Post"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "scalar": "bearer"
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
             "StorePostRequest": {
                 "title": "StorePostRequest",
-                "description": "Post request",
+                "description": "Create Post request",
                 "properties": {
                     "title": {
                         "title": "Title",
@@ -250,6 +340,51 @@
                 "type": "object",
                 "xml": {
                     "name": "StorePostRequest"
+                }
+            },
+            "UpdatePostRequest": {
+                "title": "UpdatePostRequest",
+                "description": "Update Post request",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "The blog post ID",
+                        "type": "string",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "The blog post title",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is my first blog post"
+                    },
+                    "slug": {
+                        "title": "Slug",
+                        "description": "The blog post slug",
+                        "type": "string",
+                        "format": "string",
+                        "example": "this-is-my-first-blog-post"
+                    },
+                    "body": {
+                        "title": "Body",
+                        "description": "The blog post content",
+                        "type": "string",
+                        "format": "string",
+                        "example": "This is the content of my first blog"
+                    },
+                    "user_id": {
+                        "title": "Author ID",
+                        "description": "The blog post's author ID",
+                        "type": "integer",
+                        "format": "integer",
+                        "example": 10
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UpdatePostRequest"
                 }
             },
             "CommentResource": {

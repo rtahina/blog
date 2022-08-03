@@ -6,15 +6,27 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *     title="StorePostRequest",
- *     description="Create Post request",
+ *     title="UpdatePostRequest",
+ *     description="Update Post request",
  *     @OA\Xml(
- *         name="StorePostRequest"
+ *         name="UpdatePostRequest"
  *     )
  * )
  */
-class StorePostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
+    
+    /**
+     * @OA\Property(
+     *     title="ID",
+     *     description="The blog post ID",
+     *     format="int64",
+     *     example=1
+     * )
+     *
+     * @var string
+     */
+    private $id;
     /**
      * @OA\Property(
      *     title="Title",
